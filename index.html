@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>runotoks — Официальный интернет-магазин электроники и гаджетов</title>
+  <meta name="description" content="Интернет-магазин runotoks: беспроводная акустика, умные часы, периферия и аксессуары с гарантией и быстрой доставкой." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 antialiased">
+
+  <!-- Шапка -->
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-slate-200">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-3">
+      <a href="#" class="flex items-center gap-2.5 shrink-0">
+        <div class="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-extrabold text-lg">R</div>
+        <div>
+          <div class="font-extrabold text-lg tracking-tight leading-none">runotoks</div>
+          <div class="text-[10px] font-semibold tracking-widest text-slate-400 uppercase mt-0.5">TECH STORE</div>
+        </div>
+      </a>
+
+      <div class="hidden md:flex flex-1 max-w-md mx-4">
+        <input id="searchInputDesktop" type="text" placeholder="Поиск по каталогу runotoks..."
+          class="w-full px-4 py-2 rounded-full bg-slate-100 border border-transparent focus:bg-white focus:border-slate-300 text-sm outline-none transition" />
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="toggleSearchBtn" class="md:hidden p-2.5 rounded-full hover:bg-slate-100 text-slate-700" aria-label="Поиск">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        </button>
+        <button id="ordersHistoryBtn" class="p-2.5 rounded-full hover:bg-slate-100 text-slate-700 relative" title="Мои заказы">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+        </button>
+        <button id="openCartBtn" class="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-full text-sm font-semibold transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span id="cartCount" class="bg-blue-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Мобильный поиск -->
+    <div id="mobileSearchBar" class="hidden md:hidden px-4 pb-3">
+      <input id="searchInputMobile" type="text" placeholder="Найти наушники, часы, клавиатуру..."
+        class="w-full px-4 py-2.5 rounded-xl bg-slate-100 border border-slate-200 text-sm outline-none" />
+    </div>
+  </header>
+
+  <!-- Баннер -->
+  <section class="max-w-6xl mx-auto px-4 pt-6">
+    <div class="rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-blue-950 text-white p-7 md:p-12 shadow-xl">
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-xs font-medium text-blue-200 mb-4">
+        ✨ Новая коллекция runotoks 2026
+      </span>
+      <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight max-w-2xl leading-tight">
+        Технологии, созданные для вашего комфорта
+      </h1>
+      <p class="text-slate-300 text-sm md:text-base max-w-xl mt-4 leading-relaxed">
+        Беспроводная акустика студийного качества, умные часы и минималистичные аксессуары runotoks с официальной гарантией и быстрой доставкой.
+      </p>
+      <div class="flex flex-wrap gap-3 mt-7">
+        <a href="#catalog" class="px-6 py-3 rounded-full bg-white text-slate-900 font-semibold text-sm hover:bg-slate-100 transition">
+          Перейти в каталог ↓
+        </a>
+        <button onclick="filterCategory('Аудио')" class="px-6 py-3 rounded-full bg-white/10 hover:bg-white/20 text-white font-semibold text-sm transition">
+          Новинки аудио
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Каталог -->
+  <main id="catalog" class="max-w-6xl mx-auto px-4 py-8">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+      <div id="categoryTabs" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1"></div>
+      <div class="flex items-center justify-between sm:justify-end gap-3">
+        <span id="productCountLabel" class="text-xs text-slate-500 font-medium">Показано: 8 товаров</span>
+        <select id="sortSelect" class="px-3.5 py-2 rounded-full bg-white border border-slate-200 text-xs font-medium text-slate-700 outline-none">
+          <option value="popular">По популярности</option>
+          <option value="price-asc">Сначала дешевле</option>
+          <option value="price-desc">Сначала дороже</option>
+          <option value="rating">По рейтингу</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"></div>
+  </main>
+
+  <!-- Подвал -->
+  <footer class="bg-white border-t border-slate-200 mt-12">
+    <div class="max-w-6xl mx-auto px-4 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-slate-500">
+      <div class="flex items-center gap-2 font-bold text-slate-900">
+        <span class="w-7 h-7 rounded-lg bg-slate-900 text-white flex items-center justify-center text-xs">R</span>
+        runotoks
+      </div>
+      <div>Поддержка: support@runotoks.store • Доставка по всей стране</div>
+      <div>© 2026 runotoks. Все права защищены.</div>
+    </div>
+  </footer>
+
+  <!-- Модальное окно товара -->
+  <div id="productModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-xl w-full overflow-hidden shadow-2xl animate-fadeIn">
+      <div class="relative bg-slate-100 h-64 flex items-center justify-center">
+        <img id="modalImg" src="" alt="" class="h-full w-full object-cover" />
+        <button onclick="closeProductModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/90 hover:bg-white flex items-center justify-center text-slate-700 font-bold shadow">✕</button>
+      </div>
+      <div class="p-6">
+        <div class="flex items-center justify-between gap-2">
+          <span id="modalCat" class="text-xs font-semibold uppercase tracking-wider text-blue-600"></span>
+          <span id="modalRating" class="text-xs font-semibold text-amber-500"></span>
+        </div>
+        <h2 id="modalTitle" class="text-xl font-bold mt-1"></h2>
+        <p id="modalDesc" class="text-sm text-slate-600 mt-2 leading-relaxed"></p>
+        <div class="mt-4">
+          <div class="text-xs font-semibold text-slate-500 mb-2">Выберите цвет / версию:</div>
+          <div id="modalVariants" class="flex flex-wrap gap-2"></div>
+        </div>
+        <div class="flex items-center justify-between mt-6 pt-4 border-t border-slate-100">
+          <div>
+            <div class="text-xs text-slate-400">Цена</div>
+            <div id="modalPrice" class="text-2xl font-extrabold text-slate-900"></div>
+          </div>
+          <button id="modalAddBtn" class="px-6 py-3 rounded-full bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold transition">
+            В корзину
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Боковая панель корзины и оформления заказа -->
+  <div id="cartDrawer" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm justify-end">
+    <div class="bg-white w-full max-w-md h-full flex flex-col shadow-2xl">
+      <div class="p-5 border-b border-slate-200 flex items-center justify-between">
+        <h3 id="drawerTitle" class="font-bold text-lg">Корзина</h3>
+        <button onclick="closeCart()" class="w-8 h-8 rounded-full hover:bg-slate-100 flex items-center justify-center text-slate-600">✕</button>
+      </div>
+
+      <!-- Шаг 1: Список товаров -->
+      <div id="cartStepItems" class="flex-1 overflow-y-auto p-5 space-y-4"></div>
+
+      <!-- Шаг 2: Форма оформления заказа -->
+      <form id="checkoutForm" class="hidden flex-1 overflow-y-auto p-5 space-y-4">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Имя *</label>
+            <input required name="firstName" type="text" placeholder="Иван" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-slate-900" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Фамилия *</label>
+            <input required name="lastName" type="text" placeholder="Петров" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-slate-900" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Электронная почта (Email) *</label>
+          <input required name="email" type="email" placeholder="ivan@example.com" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-slate-900" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Номер телефона *</label>
+          <input required name="phone" type="tel" placeholder="+380 (99) 123-45-67" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-slate-900" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Способ доставки *</label>
+          <select id="deliverySelect" name="delivery" onchange="updateTotals()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-slate-900 bg-white">
+            <option value="courier" data-cost="350">Курьером до двери (+350 ₽)</option>
+            <option value="pickup_point" data-cost="190">Пункт выдачи / Почта (+190 ₽)</option>
+            <option value="self" data-cost="0">Самовывоз из магазина runotoks (Бесплатно)</option>
+          </select>
+        </div>
+
+        <div id="addressBlock">
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Город и адрес доставки *</label>
+          <input id="addressInput" required name="address" type="text" placeholder="г. Киев, ул. Крещатик, д. 10, кв. 5" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-slate-900" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Способ оплаты *</label>
+          <select name="payment" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-slate-900 bg-white">
+            <option value="card">Банковской картой онлайн (Visa / MasterCard)</option>
+            <option value="apple_google">Apple Pay / Google Pay</option>
+            <option value="cod">Оплата при получении</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Комментарий к заказу</label>
+          <textarea name="comment" rows="2" placeholder="Код домофона, удобное время..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-slate-900"></textarea>
+        </div>
+      </form>
+
+      <!-- Шаг 3: Чек подтверждения -->
+      <div id="orderSuccessStep" class="hidden flex-1 overflow-y-auto p-6 text-center flex flex-col items-center justify-center">
+        <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-3xl mb-4">✓</div>
+        <h4 class="text-xl font-extrabold text-slate-900">Заказ успешно оформлен!</h4>
+        <p id="orderNumberText" class="text-sm font-semibold text-blue-600 mt-1"></p>
+        <div id="orderReceiptBox" class="w-full text-left bg-slate-50 rounded-2xl p-4 mt-5 text-xs space-y-2 border border-slate-200"></div>
+        <button onclick="resetAfterOrder()" class="mt-6 w-full py-3 rounded-full bg-slate-900 text-white font-semibold text-sm hover:bg-slate-800 transition">
+          Вернуться в магазин runotoks
+        </button>
+      </div>
+
+      <!-- Нижняя панель итогов -->
+      <div id="cartFooter" class="p-5 border-t border-slate-200 bg-slate-50">
+        <div class="space-y-1 text-sm mb-4">
+          <div class="flex justify-between text-slate-500">
+            <span>Товары:</span>
+            <span id="subtotalText">0 ₽</span>
+          </div>
+          <div id="deliveryCostRow" class="hidden flex justify-between text-slate-500">
+            <span>Доставка:</span>
+            <span id="deliveryCostText">0 ₽</span>
+          </div>
+          <div class="flex justify-between font-extrabold text-base text-slate-900 pt-1">
+            <span>Итого:</span>
+            <span id="totalText">0 ₽</span>
+          </div>
+        </div>
+        <div id="cartButtonsStep1">
+          <button id="goToCheckoutBtn" onclick="showCheckoutStep()" class="w-full py-3.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm transition">
+            Оформить заказ
+          </button>
+        </div>
+        <div id="cartButtonsStep2" class="hidden flex gap-2">
+          <button type="button" onclick="showItemsStep()" class="px-4 py-3.5 rounded-full border border-slate-300 text-slate-700 font-semibold text-sm hover:bg-white transition">
+            ← Назад
+          </button>
+          <button type="submit" form="checkoutForm" class="flex-1 py-3.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition">
+            Подтвердить заказ
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Модальное окно истории заказов -->
+  <div id="ordersModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full max-h-[80vh] flex flex-col shadow-2xl">
+      <div class="p-5 border-b border-slate-200 flex items-center justify-between">
+        <h3 class="font-bold text-lg">История заказов runotoks</h3>
+        <button onclick="document.getElementById('ordersModal').classList.add('hidden');document.getElementById('ordersModal').classList.remove('flex')" class="w-8 h-8 rounded-full hover:bg-slate-100">✕</button>
+      </div>
+      <div id="ordersListContainer" class="p-5 overflow-y-auto space-y-3 text-sm"></div>
+    </div>
+  </div>
+
+  <script>
+    const PRODUCTS = [
+      { id: 1, title: "runotoks Studio Pro ANC", category: "Аудио", price: 14990, rating: 4.9, popular: 10, variants: ["Графит", "Серебро", "Синий"], image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=700&q=80", desc: "Полноразмерные беспроводные наушники с адаптивным шумоподавлением до 45 дБ и автономностью 50 часов." },
+      { id: 2, title: "runotoks Watch Ultra S2", category: "Гаджеты", price: 18500, rating: 4.8, popular: 9, variants: ["Титан / Черный", "Титан / Оранж"], image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=700&q=80", desc: "Титановый корпус, сапфировое стекло, двухчастотный GPS и до 14 дней работы без подзарядки." },
+      { id: 3, title: "runotoks KeyMech 75% Wireless", category: "Периферия", price: 9490, rating: 4.9, popular: 8, variants: ["Dark Gray", "Retro White"], image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=700&q=80", desc: "Компактная механическая клавиатура с горячей заменой свитчей, шумоизоляцией и алюминиевым корпусом." },
+      { id: 4, title: "runotoks Pods Air 3", category: "Аудио", price: 6990, rating: 4.7, popular: 7, variants: ["Белый", "Черный матовый"], image: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=700&q=80", desc: "Компактные TWS-наушники с пространственным звуком, беспроводной зарядкой и защитой IPX5." },
+      { id: 5, title: "runotoks MagCharge 3-in-1", category: "Аксессуары", price: 5490, rating: 4.8, popular: 6, variants: ["Черный", "Серый космос"], image: "https://images.unsplash.com/photo-1615526675159-e248c3021d3f?auto=format&fit=crop&w=700&q=80", desc: "Магнитная док-станция быстрой зарядки 30 Вт одновременно для смартфона, часов и наушников." },
+      { id: 6, title: "runotoks SoundBar Mini", category: "Аудио", price: 8290, rating: 4.6, popular: 5, variants: ["Черный"], image: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=700&q=80", desc: "Портативная стереоколонка мощностью 40 Вт с глубокими басами и защитой от воды IP67." },
+      { id: 7, title: "runotoks ErgoMouse Pro", category: "Периферия", price: 4890, rating: 4.8, popular: 4, variants: ["Графит", "Белый"], image: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=700&q=80", desc: "Беспроводная эргономичная мышь с сенсором 8000 DPI, бесшумными кликами и подключением к 3 устройствам." },
+      { id: 8, title: "runotoks PowerBank 20000 PD", category: "Аксессуары", price: 4290, rating: 4.9, popular: 8, variants: ["Серебристый", "Черный"], image: "https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?auto=format&fit=crop&w=700&q=80", desc: "Внешний аккумулятор 20 000 мА·ч с мощностью 65 Вт — заряжает даже ноутбуки по USB-C." }
+    ];
+
+    let activeCategory = "Все";
+    let searchQuery = "";
+    let sortBy = "popular";
+    let cart = JSON.parse(localStorage.getItem("runotoks_cart") || "[]");
+    let orders = JSON.parse(localStorage.getItem("runotoks_orders") || "[]");
+
+    const formatPrice = (n) => n.toLocaleString("ru-RU") + " ₽";
+
+    function renderCategories() {
+      const cats = ["Все", ...new Set(PRODUCTS.map(p => p.category))];
+      document.getElementById("categoryTabs").innerHTML = cats.map(c => `
+        <button onclick="filterCategory('${c}')" class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition ${activeCategory === c ? 'bg-slate-900 text-white' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100'}">
+          ${c}
+        </button>
+      `).join("");
+    }
+
+    function filterCategory(cat) {
+      activeCategory = cat;
+      renderCategories();
+      renderProducts();
+    }
+
+    function renderProducts() {
+      let list = PRODUCTS.filter(p => {
+        const matchCat = activeCategory === "Все" || p.category === activeCategory;
+        const matchSearch = p.title.toLowerCase().includes(searchQuery) || p.desc.toLowerCase().includes(searchQuery);
+        return matchCat && matchSearch;
+      });
+
+      if (sortBy === "price-asc") list.sort((a, b) => a.price - b.price);
+      if (sortBy === "price-desc") list.sort((a, b) => b.price - a.price);
+      if (sortBy === "rating") list.sort((a, b) => b.rating - a.rating);
+      if (sortBy === "popular") list.sort((a, b) => b.popular - a.popular);
+
+      document.getElementById("productCountLabel").textContent = `Показано: ${list.length} товаров`;
+
+      document.getElementById("productsGrid").innerHTML = list.map(p => `
+        <div class="bg-white rounded-3xl border border-slate-200/80 overflow-hidden flex flex-col hover:shadow-lg transition group">
+          <div onclick="openProductModal(${p.id})" class="relative h-48 bg-slate-100 overflow-hidden cursor-pointer">
+            <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+            <span class="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-white/90 text-[11px] font-semibold text-slate-700">${p.category}</span>
+          </div>
+          <div class="p-4 flex-1 flex flex-col">
+            <div class="flex items-center justify-between text-xs text-amber-500 font-semibold mb-1">
+              <span>★ ${p.rating}</span>
+              <span class="text-slate-400 font-normal">${p.variants.length} цв.</span>
+            </div>
+            <h3 onclick="openProductModal(${p.id})" class="font-bold text-slate-900 text-base cursor-pointer hover:text-blue-600 transition">${p.title}</h3>
+            <p class="text-xs text-slate-500 mt-1 line-clamp-2 flex-1">${p.desc}</p>
+            <div class="flex items-center justify-between mt-4 pt-3 border-t border-slate-100">
+              <span class="font-extrabold text-base">${formatPrice(p.price)}</span>
+              <button onclick="addToCart(${p.id}, '${p.variants[0]}')" class="px-3.5 py-2 rounded-full bg-slate-900 hover:bg-blue-600 text-white text-xs font-semibold transition">
+                + В корзину
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function openProductModal(id) {
+      const p = PRODUCTS.find(x => x.id === id);
+      let selectedVariant = p.variants[0];
+      document.getElementById("modalImg").src = p.image;
+      document.getElementById("modalCat").textContent = p.category;
+      document.getElementById("modalRating").textContent = `★ ${p.rating} • В наличии`;
+      document.getElementById("modalTitle").textContent = p.title;
+      document.getElementById("modalDesc").textContent = p.desc;
+      document.getElementById("modalPrice").textContent = formatPrice(p.price);
+
+      const renderVars = () => {
+        document.getElementById("modalVariants").innerHTML = p.variants.map(v => `
+          <button type="button" onclick="selectVar('${v}')" class="px-3.5 py-1.5 rounded-full text-xs font-semibold border transition ${selectedVariant === v ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-700 border-slate-200'}">
+            ${v}
+          </button>
+        `).join("");
+      };
+      window.selectVar = (v) => { selectedVariant = v; renderVars(); };
+      renderVars();
+
+      document.getElementById("modalAddBtn").onclick = () => {
+        addToCart(p.id, selectedVariant);
+        closeProductModal();
+      };
+
+      const modal = document.getElementById("productModal");
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    }
+
+    function closeProductModal() {
+      const modal = document.getElementById("productModal");
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    }
+
+    function saveCart() {
+      localStorage.setItem("runotoks_cart", JSON.stringify(cart));
+      updateCartUI();
+    }
+
+    function addToCart(productId, variant) {
+      const p = PRODUCTS.find(x => x.id === productId);
+      const key = `${productId}_${variant}`;
+      const existing = cart.find(item => item.key === key);
+      if (existing) existing.qty += 1;
+      else cart.push({ key, id: p.id, title: p.title, price: p.price, image: p.image, variant, qty: 1 });
+      saveCart();
+      openCart();
+    }
+
+    function changeQty(key, delta) {
+      const idx = cart.findIndex(x => x.key === key);
+      if (idx === -1) return;
+      cart[idx].qty += delta;
+      if (cart[idx].qty <= 0) cart.splice(idx, 1);
+      saveCart();
+    }
+
+    function updateCartUI() {
+      const count = cart.reduce((s, i) => s + i.qty, 0);
+      document.getElementById("cartCount").textContent = count;
+
+      const container = document.getElementById("cartStepItems");
+      if (cart.length === 0) {
+        container.innerHTML = `<div class="text-center text-slate-400 py-16 text-sm">Корзина пока пуста.<br/>Выберите товары в каталоге runotoks.</div>`;
+        document.getElementById("goToCheckoutBtn").disabled = true;
+        document.getElementById("goToCheckoutBtn").classList.add("opacity-40", "cursor-not-allowed");
+      } else {
+        document.getElementById("goToCheckoutBtn").disabled = false;
+        document.getElementById("goToCheckoutBtn").classList.remove("opacity-40", "cursor-not-allowed");
+        container.innerHTML = cart.map(item => `
+          <div class="flex gap-3 items-center bg-slate-50 p-3 rounded-2xl border border-slate-100">
+            <img src="${item.image}" class="w-16 h-16 rounded-xl object-cover bg-white" />
+            <div class="flex-1 min-w-0">
+              <div class="font-bold text-sm truncate">${item.title}</div>
+              <div class="text-xs text-slate-400">${item.variant}</div>
+              <div class="font-bold text-sm mt-1">${formatPrice(item.price * item.qty)}</div>
+            </div>
+            <div class="flex items-center gap-1.5 bg-white border border-slate-200 rounded-full px-2 py-1">
+              <button onclick="changeQty('${item.key}', -1)" class="w-5 h-5 text-xs font-bold">−</button>
+              <span class="text-xs font-bold w-4 text-center">${item.qty}</span>
+              <button onclick="changeQty('${item.key}', 1)" class="w-5 h-5 text-xs font-bold">+</button>
+            </div>
+          </div>
+        `).join("");
+      }
+      updateTotals();
+    }
+
+    function updateTotals() {
+      const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+      const isCheckout = !document.getElementById("checkoutForm").classList.contains("hidden");
+      const sel = document.getElementById("deliverySelect");
+      const deliveryCost = isCheckout ? Number(sel.options[sel.selectedIndex].dataset.cost || 0) : 0;
+
+      const addressBlock = document.getElementById("addressBlock");
+      const addressInput = document.getElementById("addressInput");
+      if (sel.value === "self") {
+        addressBlock.classList.add("hidden");
+        addressInput.required = false;
+      } else {
+        addressBlock.classList.remove("hidden");
+        addressInput.required = true;
+      }
+
+      document.getElementById("subtotalText").textContent = formatPrice(subtotal);
+      document.getElementById("deliveryCostText").textContent = deliveryCost === 0 ? "Бесплатно" : formatPrice(deliveryCost);
+      document.getElementById("totalText").textContent = formatPrice(subtotal + deliveryCost);
+    }
+
+    function openCart() {
+      showItemsStep();
+      const drawer = document.getElementById("cartDrawer");
+      drawer.classList.remove("hidden");
+      drawer.classList.add("flex");
+    }
+
+    function closeCart() {
+      const drawer = document.getElementById("cartDrawer");
+      drawer.classList.add("hidden");
+      drawer.classList.remove("flex");
+    }
+
+    function showItemsStep() {
+      document.getElementById("drawerTitle").textContent = "Корзина";
+      document.getElementById("cartStepItems").classList.remove("hidden");
+      document.getElementById("checkoutForm").classList.add("hidden");
+      document.getElementById("orderSuccessStep").classList.add("hidden");
+      document.getElementById("cartFooter").classList.remove("hidden");
+      document.getElementById("cartButtonsStep1").classList.remove("hidden");
+      document.getElementById("cartButtonsStep2").classList.add("hidden");
+      document.getElementById("deliveryCostRow").classList.add("hidden");
+      updateTotals();
+    }
+
+    function showCheckoutStep() {
+      if (cart.length === 0) return;
+      document.getElementById("drawerTitle").textContent = "Оформление заказа";
+      document.getElementById("cartStepItems").classList.add("hidden");
+      document.getElementById("checkoutForm").classList.remove("hidden");
+      document.getElementById("orderSuccessStep").classList.add("hidden");
+      document.getElementById("cartButtonsStep1").classList.add("hidden");
+      document.getElementById("cartButtonsStep2").classList.remove("hidden");
+      document.getElementById("deliveryCostRow").classList.remove("hidden");
+      updateTotals();
+    }
+
+    document.getElementById("checkoutForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const sel = document.getElementById("deliverySelect");
+      const deliveryLabel = sel.options[sel.selectedIndex].text;
+      const deliveryCost = Number(sel.options[sel.selectedIndex].dataset.cost || 0);
+      const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+      const orderNum = "RNT-" + Math.floor(100000 + Math.random() * 900000);
+
+      const orderData = {
+        number: orderNum,
+        date: new Date().toLocaleString("ru-RU"),
+        customer: `${fd.get("firstName")} ${fd.get("lastName")}`,
+        email: fd.get("email"),
+        phone: fd.get("phone"),
+        delivery: deliveryLabel,
+        address: fd.get("delivery") === "self" ? "Самовывоз из магазина runotoks" : fd.get("address"),
+        payment: fd.get("payment"),
+        total: subtotal + deliveryCost,
+        items: [...cart]
+      };
+
+      orders.unshift(orderData);
+      localStorage.setItem("runotoks_orders", JSON.stringify(orders));
+
+      document.getElementById("drawerTitle").textContent = "Заказ принят";
+      document.getElementById("checkoutForm").classList.add("hidden");
+      document.getElementById("cartFooter").classList.add("hidden");
+      document.getElementById("orderSuccessStep").classList.remove("hidden");
+      document.getElementById("orderNumberText").textContent = `Номер заказа: ${orderNum}`;
+      document.getElementById("orderReceiptBox").innerHTML = `
+        <div><span class="text-slate-400">Получатель:</span> <b>${orderData.customer}</b></div>
+        <div><span class="text-slate-400">Телефон:</span> <b>${orderData.phone}</b></div>
+        <div><span class="text-slate-400">Email:</span> <b>${orderData.email}</b></div>
+        <div><span class="text-slate-400">Доставка:</span> <b>${orderData.delivery}</b></div>
+        <div><span class="text-slate-400">Адрес:</span> <b>${orderData.address}</b></div>
+        <div class="pt-2 border-t border-slate-200 flex justify-between text-sm">
+          <span>К оплате:</span> <b>${formatPrice(orderData.total)}</b>
+        </div>
+      `;
+
+      cart = [];
+      saveCart();
+      e.target.reset();
+    });
+
+    function resetAfterOrder() {
+      closeCart();
+      showItemsStep();
+    }
+
+    document.getElementById("openCartBtn").onclick = openCart;
+    document.getElementById("toggleSearchBtn").onclick = () => document.getElementById("mobileSearchBar").classList.toggle("hidden");
+    document.getElementById("searchInputDesktop").oninput = (e) => { searchQuery = e.target.value.toLowerCase(); renderProducts(); };
+    document.getElementById("searchInputMobile").oninput = (e) => { searchQuery = e.target.value.toLowerCase(); renderProducts(); };
+    document.getElementById("sortSelect").onchange = (e) => { sortBy = e.target.value; renderProducts(); };
+
+    document.getElementById("ordersHistoryBtn").onclick = () => {
+      const container = document.getElementById("ordersListContainer");
+      if (orders.length === 0) {
+        container.innerHTML = `<div class="text-center text-slate-400 py-8">У вас пока нет оформленных заказов.</div>`;
+      } else {
+        container.innerHTML = orders.map(o => `
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1">
+            <div class="flex justify-between font-bold">
+              <span class="text-blue-600">${o.number}</span>
+              <span>${formatPrice(o.total)}</span>
+            </div>
+            <div class="text-xs text-slate-400">${o.date}</div>
+            <div class="text-xs text-slate-600 pt-1">${o.customer} • ${o.phone}</div>
+            <div class="text-xs text-slate-500">${o.items.map(i => `${i.title} ×${i.qty}`).join(", ")}</div>
+          </div>
+        `).join("");
+      }
+      const m = document.getElementById("ordersModal");
+      m.classList.remove("hidden");
+      m.classList.add("flex");
+    };
+
+    renderCategories();
+    renderProducts();
+    updateCartUI();
+  </script>
+</body>
+</html>
