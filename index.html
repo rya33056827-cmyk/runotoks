@@ -628,4 +628,114 @@
 </script>
 
 </body>
+  <!-- Кнопка и окно чата runotoks (Firebase) -->
+<button id="rtkChatBtn" type="button" aria-label="Открыть чат"
+  style="position:fixed;top:16px;right:16px;z-index:9999;width:48px;height:48px;border-radius:16px;border:none;background:#ffffff;box-shadow:0 6px 20px rgba(15,23,42,0.18);display:flex;align-items:center;justify-content:center;cursor:pointer;">
+  <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true">
+    <defs>
+      <linearGradient id="rtkRGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#ff2a85"/>
+        <stop offset="35%" stop-color="#ff7a00"/>
+        <stop offset="70%" stop-color="#00c2ff"/>
+        <stop offset="100%" stop-color="#7b2cbf"/>
+      </linearGradient>
+    </defs>
+    <text x="16" y="23" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="900" fill="url(#rtkRGrad)">R</text>
+  </svg>
+</button>
+
+<div id="rtkChatBox" style="display:none;position:fixed;top:74px;right:16px;z-index:9999;width:320px;max-width:calc(100vw - 32px);background:#ffffff;color:#0f172a;border:1px solid #cbd5e1;border-radius:14px;padding:12px;box-shadow:0 12px 32px rgba(15,23,42,0.22);font-family:Inter,system-ui,sans-serif;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+    <span style="font-weight:700;font-size:15px;">Чат runotoks</span>
+    <button id="rtkChatClose" type="button" style="border:none;background:transparent;font-size:18px;line-height:1;cursor:pointer;color:#475569;">×</button>
+  </div>
+  <input id="rtkChatUser" type="text" placeholder="Ваше имя"
+    style="width:100%;box-sizing:border-box;padding:6px 8px;margin-bottom:8px;border:1px solid #cbd5e1;border-radius:8px;font-size:13px;" />
+  <div id="rtkChatMessages" style="height:190px;overflow-y:auto;border:1px solid #e2e8f0;border-radius:8px;padding:8px;margin-bottom:8px;background:#f8fafc;font-size:13px;"></div>
+  <form id="rtkChatForm" style="display:flex;gap:6px;">
+    <input id="rtkChatInput" type="text" placeholder="Написать сообщение..."
+      style="flex:1;padding:6px 8px;border:1px solid #cbd5e1;border-radius:8px;font-size:13px;" />
+    <button type="submit" style="padding:6px 12px;border:none;border-radius:8px;background:#0f172a;color:#fff;font-size:13px;cursor:pointer;">Отпр.</button>
+  </form>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+  import {
+    getFirestore,
+    collection,
+    addDoc,
+    query,
+    orderBy,
+    onSnapshot,
+    serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCP-HMycFzNiDo4yXwY...",
+    authDomain: "runotoks-c05c2.firebaseapp.com",
+    projectId: "runotoks-c05c2",
+    storageBucket: "runotoks-c05c2.firebasestorage.app",
+    messagingSenderId: "842458328408",
+    appId: "1:842458328408:web:..."
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const messagesRef = collection(db, "messages");
+
+  const btn = document.getElementById("rtkChatBtn");
+  const box = document.getElementById("rtkChatBox");
+  const closeBtn = document.getElementById("rtkChatClose");
+  const userInput = document.getElementById("rtkChatUser");
+  const listEl = document.getElementById("rtkChatMessages");
+  const form = document.getElementById("rtkChatForm");
+  const textInput = document.getElementById("rtkChatInput");
+
+  btn.addEventListener("click", () => {
+    const isOpen = box.style.display === "block";
+    box.style.display = isOpen ? "none" : "block";
+    if (!isOpen) listEl.scrollTop = listEl.scrollHeight;
+  });
+
+  closeBtn.addEventListener("click", () => {
+    box.style.display = "none";
+  });
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const author = (userInput.value.trim() || "Гость");
+    const text = textInput.value.trim();
+    if (!text) return;
+
+    textInput.value = "";
+    await addDoc(messagesRef, {
+      author,
+      text,
+      createdAt: serverTimestamp()
+    });
+  });
+
+  const q = query(messagesRef, orderBy("createdAt", "asc"));
+  onSnapshot(q, (snapshot) => {
+    listEl.innerHTML = "";
+    snapshot.forEach((doc) => {
+      const m = doc.data();
+      const row = document.createElement("div");
+      row.style.marginBottom = "6px";
+
+      const nameEl = document.createElement("strong");
+      nameEl.textContent = `${m.author || "Гость"}: `;
+
+      const textEl = document.createElement("span");
+      textEl.textContent = m.text || "";
+
+      row.appendChild(nameEl);
+      row.appendChild(textEl);
+      listEl.appendChild(row);
+    });
+    listEl.scrollTop = listEl.scrollHeight;
+  });
+</script>
+
 </html>
