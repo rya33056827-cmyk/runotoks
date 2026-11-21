@@ -558,5 +558,74 @@
     renderProducts();
     updateCartUI();
   </script>
+  <!-- Чат в реальном времени (Firebase Firestore) -->
+<div id="rtkChatBox" style="max-width:420px;margin:20px auto;padding:14px;border:1px solid #333;border-radius:12px;background:#111;color:#fff;font-family:sans-serif;">
+  <div style="font-weight:700;margin-bottom:8px;">Чат runotoks</div>
+  <input id="rtkChatUser" type="text" placeholder="Ваше имя" style="width:100%;box-sizing:border-box;padding:8px;margin-bottom:8px;border-radius:8px;border:1px solid #444;background:#1c1c1c;color:#fff;" />
+  <div id="rtkChatMessages" style="height:220px;overflow-y:auto;padding:8px;margin-bottom:8px;border-radius:8px;background:#181818;font-size:14px;"></div>
+  <form id="rtkChatForm" style="display:flex;gap:6px;">
+    <input id="rtkChatInput" type="text" placeholder="Написать сообщение..." required style="flex:1;padding:8px;border-radius:8px;border:1px solid #444;background:#1c1c1c;color:#fff;" />
+    <button type="submit" style="padding:8px 14px;border-radius:8px;border:none;background:#2563eb;color:#fff;font-weight:600;cursor:pointer;">Отправить</button>
+  </form>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import {
+    getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCP-HMyaFzNiDo4yXwYNmJk2QZineSPE5A",
+    authDomain: "runotoks-c05c2.firebaseapp.com",
+    projectId: "runotoks-c05c2",
+    storageBucket: "runotoks-c05c2.firebasestorage.app",
+    messagingSenderId: "257596088504",
+    appId: "1:257596088504:web:a0bcea77ee0e3c8849944d",
+    measurementId: "G-56VTDVLB2H"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const messagesRef = collection(db, "messages");
+
+  const form = document.getElementById("rtkChatForm");
+  const userInput = document.getElementById("rtkChatUser");
+  const textInput = document.getElementById("rtkChatInput");
+  const box = document.getElementById("rtkChatMessages");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const text = textInput.value.trim();
+    const author = (userInput.value.trim() || "Гость").slice(0, 30);
+    if (!text) return;
+
+    textInput.value = "";
+    await addDoc(messagesRef, {
+      author,
+      text,
+      createdAt: serverTimestamp()
+    });
+  });
+
+  const q = query(messagesRef, orderBy("createdAt", "asc"));
+  onSnapshot(q, (snapshot) => {
+    box.innerHTML = "";
+    snapshot.forEach((doc) => {
+      const m = doc.data();
+      const row = document.createElement("div");
+      row.style.marginBottom = "6px";
+      const nameEl = document.createElement("strong");
+      nameEl.textContent = `${m.author || "Гость"}: `;
+      const textEl = document.createElement("span");
+      textEl.textContent = m.text || "";
+      row.appendChild(nameEl);
+      row.appendChild(textEl);
+      box.appendChild(row);
+    });
+    box.scrollTop = box.scrollHeight;
+  });
+</script>
+
 </body>
 </html>
