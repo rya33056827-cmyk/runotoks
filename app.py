@@ -4,7 +4,7 @@ from flask import Flask, request, jsonify, make_response
 
 app = Flask(__name__)
 
-API_KEY = os.environ.get("GEMINI_API_KEY", "")
+API_KEY = (os.environ.get("GEMINI_API_KEY") or "").strip()
 SYSTEM_PROMPT = (
     "Ты Рунотокс — умный ИИ-ассистент внутри проекта runotoks. "
     "Отвечай чётко, понятно и по делу на языке пользователя."
@@ -17,6 +17,7 @@ ALLOWED_ORIGINS = {
     "http://127.0.0.1:5500",
 }
 
+
 @app.after_request
 def add_cors_headers(response):
     origin = request.headers.get("Origin", "")
@@ -27,9 +28,11 @@ def add_cors_headers(response):
     response.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
     return response
 
+
 @app.route("/", methods=["GET"])
 def home():
     return jsonify({"status": "ok", "bot": "runotoks"})
+
 
 @app.route("/chat", methods=["POST", "OPTIONS"])
 def chat():
@@ -54,7 +57,7 @@ def chat():
     if not contents or contents[-1].get("parts", [{}])[0].get("text") != user_message:
         contents.append({"role": "user", "parts": [{"text": user_message}]})
 
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={API_KEY}"
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key={API_KEY}"
     payload = {
         "system_instruction": {"parts": [{"text": SYSTEM_PROMPT}]},
         "contents": contents,
@@ -74,6 +77,7 @@ def chat():
         return jsonify({"reply": reply or "Не удалось сформировать ответ."})
     except requests.RequestException as exc:
         return jsonify({"error": f"Ошибка обращения к модели: {exc}"}), 502
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
