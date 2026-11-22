@@ -11,6 +11,7 @@ SYSTEM_PROMPT = (
 )
 
 ALLOWED_ORIGINS = {
+    "https://rya33056827-cmyk.github.io",
     "https://6827-cmyk.github.io",
     "http://localhost:3000",
     "http://127.0.0.1:5500",
