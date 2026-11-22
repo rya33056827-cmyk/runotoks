@@ -64,7 +64,7 @@ def chat():
     }
 
     try:
-        resp = requests.post(url, json=payload, timeout=25)
+        resp = requests.post(url, json=payload, timeout=60)
         resp.raise_for_status()
         result = resp.json()
         reply = (
